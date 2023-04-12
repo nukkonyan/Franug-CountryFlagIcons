@@ -1,6 +1,11 @@
-# Franug-CountryFlagIcons
+# Scoreboard country flags
 
-https://forums.alliedmods.net/showthread.php?t=319897
+###
+ - Credits
+    - Franc1sco
+	   - Created the plugin.
+	   - https://forums.alliedmods.net/showthread.php?t=319897
+	- Teamkiller324 - Updating the plugin, adding new countries onto config.
 
 ### Added changes with this fork
  - Flags
