@@ -15,7 +15,6 @@
  * this program. If not, see http://www.gnu.org/licenses/.
  */
 
-#include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
 #include <geoip>
@@ -26,7 +25,7 @@
 int m_iOffset = -1;
 int m_iLevel[MAXPLAYERS+1];
 
-Handle hShowFlagCookie;
+Cookie hShowFlagCookie;
 
 char m_cFilePath[PLATFORM_MAX_PATH];
 char serverIp[16];
@@ -38,7 +37,7 @@ bool g_hShowflag[MAXPLAYERS + 1] = {true, ...};
 
 ConVar net_public_adr = null;
 
-#define DATA "1.4"
+#define DATA "1.4.1"
 
 public Plugin myinfo =
 {
@@ -64,7 +63,7 @@ public void OnPluginStart()
 	BuildPath(Path_SM, m_cFilePath, sizeof(m_cFilePath), "configs/franug_countryflags.cfg");
 
 	RegConsoleCmd("sm_showflag", Cmd_Showflag, "This allows players to hide their flag");
-	hShowFlagCookie = RegClientCookie("Flags-Icons_No_Flags_Cookie", "Show or hide the flag.", CookieAccess_Private);
+	hShowFlagCookie = new Cookie("Flags-Icons_No_Flags_Cookie", "Show or hide the flag.", CookieAccess_Private);
 
 	for(int i = 1; i <= MaxClients; i++)
 	{
@@ -72,6 +71,29 @@ public void OnPluginStart()
 	}
 
 	g_bCustomLevels = LibraryExists("ScoreboardCustomLevels");
+}
+
+public void OnAllPluginsLoaded()
+{
+	char sBuffer[PLATFORM_MAX_PATH];
+
+	SDKHook(GetPlayerResourceEntity(), SDKHook_ThinkPost, OnThinkPost);
+
+	if (kv != null)kv.Close();
+
+	kv = new KeyValues("CountryFlags");
+	kv.ImportFromFile(m_cFilePath);
+
+	if (!kv.GotoFirstSubKey()) return;
+
+	do
+	{
+		Format(sBuffer, sizeof(sBuffer), "materials/panorama/images/icons/xp/level%i.png", kv.GetNum("index"));
+		AddFileToDownloadsTable(sBuffer);
+
+	} while (kv.GotoNextKey());
+
+	kv.Rewind();
 }
 
 public void OnConfigsExecuted()
@@ -103,12 +125,12 @@ public OnClientPostAdminCheck(client)
 
 	if (!GetClientIP(client, ip, sizeof(ip)) || !IsLocalAddress(ip) && !GeoipCode2(ip, code2) || !g_hShowflag[client])
 	{
-		if(KvJumpToKey(kv, "UNKNOW"))
+		if(kv.JumpToKey("UNKNOWN"))
 		{
-			m_iLevel[client] = KvGetNum(kv, "index");
+			m_iLevel[client] = kv.GetNum("index");
 		}
 
-		KvRewind(kv);
+		kv.Rewind();
 		return;
 	}
 
@@ -117,20 +139,20 @@ public OnClientPostAdminCheck(client)
 		GeoipCode2(serverIp, code2);
 	}
 
-	if(!KvJumpToKey(kv, code2))
+	if(!kv.JumpToKey(code2))
 	{
-		KvRewind(kv);
-		if(KvJumpToKey(kv, "UNKNOW"))
+		kv.Rewind();
+		if(kv.JumpToKey("UNKNOWN"))
 		{
-			m_iLevel[client] = KvGetNum(kv, "index");
+			m_iLevel[client] = kv.GetNum("index");
 		}
 
-		KvRewind(kv);
+		kv.Rewind();
 		return;
 	}
 
-	m_iLevel[client] = KvGetNum(kv, "index");
-	KvRewind(kv);
+	m_iLevel[client] = kv.GetNum("index");
+	kv.Rewind();
 }
 
 public void OnClientDisconnect(int client)
@@ -143,14 +165,14 @@ public Action Cmd_Showflag(int client, int args)
 	if (AreClientCookiesCached(client))
 	{
 		char sCookieValue[12];
-		GetClientCookie(client, hShowFlagCookie, sCookieValue, sizeof(sCookieValue));
+		hShowFlagCookie.Get(client, sCookieValue, sizeof(sCookieValue));
 		int cookieValue = StringToInt(sCookieValue);
 		if (cookieValue == 1)
 		{
 			cookieValue = 0;
 			g_hShowflag[client] = true;
 			IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
-			SetClientCookie(client, hShowFlagCookie, sCookieValue);
+			hShowFlagCookie.Set(client, sCookieValue);
 			OnClientPostAdminCheck(client);
 			ReplyToCommand(client, "[SM] Your flag is now visible");
 		}
@@ -159,35 +181,12 @@ public Action Cmd_Showflag(int client, int args)
 			cookieValue = 1;
 			g_hShowflag[client] = false;
 			IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
-			SetClientCookie(client, hShowFlagCookie, sCookieValue);
+			hShowFlagCookie.Set(client, sCookieValue);
 			OnClientPostAdminCheck(client);
 			ReplyToCommand(client, "[SM] Your flag is no longer visible");
 		}
 	}
 	return Plugin_Handled;
-}
-
-public void OnMapStart()
-{
-	char sBuffer[PLATFORM_MAX_PATH];
-
-	SDKHook(GetPlayerResourceEntity(), SDKHook_ThinkPost, OnThinkPost);
-
-	if (kv != null)kv.Close();
-
-	kv = CreateKeyValues("CountryFlags");
-	FileToKeyValues(kv, m_cFilePath);
-
-	if (!KvGotoFirstSubKey(kv)) return;
-
-	do
-	{
-		Format(sBuffer, sizeof(sBuffer), "materials/panorama/images/icons/xp/level%i.png", KvGetNum(kv, "index"));
-		AddFileToDownloadsTable(sBuffer);
-
-	} while (KvGotoNextKey(kv));
-
-	KvRewind(kv);
 }
 
 public void OnClientCookiesCached(int client)
@@ -210,8 +209,8 @@ public void OnClientCookiesCached(int client)
 
 public void OnThinkPost(int m_iEntity)
 {
-	int m_iLevelTemp[MAXPLAYERS+1] = 0;
-	GetEntDataArray(m_iEntity, m_iOffset, m_iLevelTemp, MAXPLAYERS+1);
+	int m_iLevelTemp[MAXPLAYERS+1] = {0, ...};
+	GetEntDataArray(m_iEntity, m_iOffset, m_iLevelTemp, sizeof(m_iLevelTemp));
 
 	for(int i = 1; i <= MaxClients; i++)
 	{
