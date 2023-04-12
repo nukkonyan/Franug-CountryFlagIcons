@@ -3,7 +3,7 @@
     - Franc1sco
 	   - Created the plugin. (https://forums.alliedmods.net/showthread.php?t=319897)
 	- Teamkiller324
-	   - Updating the plugin.
+	   - Updated the plugin.
 	   - Adding new countries onto config.
 
 # Changes with this fork
