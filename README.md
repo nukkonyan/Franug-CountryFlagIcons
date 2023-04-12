@@ -7,7 +7,7 @@
 	   - Adding new countries onto config.
 
 # Changes with this fork
- - Flags
+ - Flags added
    - Ireland
    - Åland Islands (Åland)
    - Greenland
