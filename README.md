@@ -4,6 +4,7 @@
 	   - Created the plugin. (https://forums.alliedmods.net/showthread.php?t=319897)
 	- Teamkiller324
 	   - Updated the plugin.
+	   - Added translation support.
 	   - Adding new countries onto config.
 
 # Changes with this fork
