@@ -24,6 +24,9 @@
 
 ## Latest changelog - Version 1.4.2
    - Fixed KeyValues invalid handle error.
+   - Added translation support.
+      - Swedish
+	  - Japanese
    - Updated config
       - Fixed flag for ' Venezuela ' with correct country code.
 	  - Added flag for ' United States Minor Outlying Islands '.
