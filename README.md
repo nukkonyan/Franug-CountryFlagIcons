@@ -15,3 +15,9 @@
    - Faroe Islands
    - Latvia (Corrected flag)
    - Norway (Corrected flag)
+   - United States Minor Outlying Islands
+   - Venezuela (Corrected for flag to work)
+   - Saint Barthelemy
+   - Saint Helena
+   - Saint Martin
+   - Saint Pierre and Miquelon
