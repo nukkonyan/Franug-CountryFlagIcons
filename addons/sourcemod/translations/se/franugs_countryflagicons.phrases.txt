@@ -6,6 +6,6 @@
 	}
 	"#ScoreBoardFlags_FlagInactive"
 	{
-		"se" "Din flagga e ej synlig längre."
+		"se" "Din flagga e nu ej synlig längre."
 	}
 }
