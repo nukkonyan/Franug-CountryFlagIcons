@@ -21,3 +21,13 @@
    - Saint Helena
    - Saint Martin
    - Saint Pierre and Miquelon
+
+## Latest changelog - Version 1.4.2
+   - Fixed KeyValues invalid handle error.
+   - Updated config
+      - Fixed flag for ' Venezuela ' with correct country code.
+	  - Added flag for ' United States Minor Outlying Islands '.
+	  - Added flag for ' Saint Barthelemy '.
+	  - Added flag for ' Saint Helena '.
+	  - Added flag for ' Saint Martin '.
+	  - Added flag for ' Saint Pierre and Miquelon'.
