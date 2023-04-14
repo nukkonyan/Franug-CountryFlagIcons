@@ -1,0 +1,11 @@
+"Phraes"
+{
+	"#ScoreBoardFlags_FlagActive"
+	{
+		"se" "Din flagga e nu synlig."
+	}
+	"#ScoreBoardFlags_FlagInactive"
+	{
+		"se" "Din flagga e ej synlig längre."
+	}
+}

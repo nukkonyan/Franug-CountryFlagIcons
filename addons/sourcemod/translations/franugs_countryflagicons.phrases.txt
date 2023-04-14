@@ -2,10 +2,10 @@
 {
 	"#ScoreBoardFlags_FlagActive"
 	{
-		"en" "Your flag is now visible"
+		"en" "Your flag is now visible."
 	}
 	"#ScoreBoardFlags_FlagInactive"
 	{
-		"en" "Your flag is no longer visible"
+		"en" "Your flag is no longer visible."
 	}
 }
