@@ -1,4 +1,4 @@
-"Phraes"
+"Phrases"
 {
 	"#ScoreBoardFlags_FlagActive"
 	{

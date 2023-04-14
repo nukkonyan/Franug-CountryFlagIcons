@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"#ScoreBoardFlags_FlagActive"
+	{
+		"jp" "今のあなたのフラグは見える。"
+	}
+	"#ScoreBoardFlags_FlagInactive"
+	{
+		"jp" "今のあなたのフラッグは見えない。"
+	}
+}
