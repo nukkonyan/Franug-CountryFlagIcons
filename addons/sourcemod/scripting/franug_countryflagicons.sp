@@ -30,18 +30,18 @@ Cookie hShowFlagCookie;
 char m_cFilePath[PLATFORM_MAX_PATH];
 char serverIp[16];
 
-KeyValues kv;
+StringMap trie;
 
 bool g_bCustomLevels;
 bool g_hShowflag[MAXPLAYERS + 1] = {true, ...};
 
 ConVar net_public_adr = null;
 
-#define DATA "1.4.2"
+#define DATA "1.4.3"
 
 public Plugin myinfo = {
-	name = "SM Franug Country Flag Icons",
-	author = "Franc1sco franug",
+	name = "Franug Country Flag Icons",
+	author = "Franc1sco franug, teamkiller324",
 	description = "",
 	version = DATA,
 	url = "http://steamcommunity.com/id/franug"
@@ -60,30 +60,33 @@ public void OnPluginStart() {
 	m_iOffset = FindSendPropInfo("CCSPlayerResource", "m_nPersonaDataPublicLevel");
 	BuildPath(Path_SM, m_cFilePath, sizeof(m_cFilePath), "configs/franug_countryflags.cfg");
 
+	RegConsoleCmd("sm_flag", Cmd_Showflag, "This allows players to hide their flag");
 	RegConsoleCmd("sm_showflag", Cmd_Showflag, "This allows players to hide their flag");
 	hShowFlagCookie = new Cookie("Flags-Icons_No_Flags_Cookie", "Show or hide the flag.", CookieAccess_Private);
 
 	for(int i = 1; i <= MaxClients; i++) m_iLevel[i] = -1;
-
-	g_bCustomLevels = LibraryExists("ScoreboardCustomLevels");
 	
-	char sBuffer[PLATFORM_MAX_PATH];
+	g_bCustomLevels = LibraryExists("ScoreboardCustomLevels");	
 	
-	if(kv != null) kv.Close();
-
-	kv = new KeyValues("CountryFlags");
+	trie = new StringMap();
+	KeyValues kv = new KeyValues("CountryFlags");
 	kv.ImportFromFile(m_cFilePath);
-
 	if(!kv.GotoFirstSubKey()) SetFailState("Failed to read config file! (Is it installed in /configs/ directory?)");
-
+	
 	do {
-		Format(sBuffer, sizeof(sBuffer), "materials/panorama/images/icons/xp/level%i.png", kv.GetNum("index"));
-		AddFileToDownloadsTable(sBuffer);
-
+		char section[8];
+		kv.GetSectionName(section, sizeof(section));
+		int index = kv.GetNum("index");
+		
+		char buffer[64];
+		Format(buffer, sizeof(buffer), "materials/panorama/images/icons/xp/level%i.png", index);
+		AddFileToDownloadsTable(buffer);
+		
+		trie.SetValue(section, index);
 	}
 	while (kv.GotoNextKey());
-
-	kv.Rewind();
+	
+	delete kv;
 }
 
 public void OnMapStart() {
@@ -114,50 +117,47 @@ public OnClientPostAdminCheck(client) {
 	char code2[3];
 
 	if(!GetClientIP(client, ip, sizeof(ip)) || !IsLocalAddress(ip) && !GeoipCode2(ip, code2) || !g_hShowflag[client]) {
-		if(kv.JumpToKey("UNKNOWN")) {
-			m_iLevel[client] = kv.GetNum("index");
-			kv.GoBack();
-		}
+		if(trie.ContainsKey("UNKNOWN")) trie.GetValue("UNKNOWN", m_iLevel[client]);
 		return;
 	}
 
 	if(IsLocalAddress(ip)) GeoipCode2(serverIp, code2);
 
-	if(!kv.JumpToKey(code2)) {
-		if(kv.JumpToKey("UNKNOWN")) {
-			m_iLevel[client] = kv.GetNum("index");
-			kv.GoBack();
+	switch(trie.ContainsKey(code2)) {
+		case false: {
+			if(trie.ContainsKey("UNKNOWN")) trie.GetValue("UNKNOWN", m_iLevel[client]);
+			LogError("[Franug: Scoreboard Flag] No flag was found with \" %s \" for \" %N \", using fallback.. (Needs to be added)", code2, client);
 		}
-		return;
+		case true: trie.GetValue(code2, m_iLevel[client]);
 	}
-
-	m_iLevel[client] = kv.GetNum("index");
-	kv.GoBack();
 }
 
 public void OnClientDisconnect(int client) {
 	m_iLevel[client] = -1;
 }
 
-public Action Cmd_Showflag(int client, int args) {
-	if (AreClientCookiesCached(client)) {
+Action Cmd_Showflag(int client, int args) {
+	if(AreClientCookiesCached(client)) {
 		char sCookieValue[12];
 		hShowFlagCookie.Get(client, sCookieValue, sizeof(sCookieValue));
 		int cookieValue = StringToInt(sCookieValue);
-		if (cookieValue == 1) {
-			cookieValue = 0;
-			g_hShowflag[client] = true;
-			IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
-			hShowFlagCookie.Set(client, sCookieValue);
-			OnClientPostAdminCheck(client);
-			ReplyToCommand(client, "[SM] %t", "#ScoreBoardFlags_FlagActive");
-		} else {
-			cookieValue = 1;
-			g_hShowflag[client] = false;
-			IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
-			hShowFlagCookie.Set(client, sCookieValue);
-			OnClientPostAdminCheck(client);
-			ReplyToCommand(client, "[SM] %t", "ScoreBoardFlags_FlagInactive");
+		switch(cookieValue == 1) {
+			case false: {
+				cookieValue = 1;
+				g_hShowflag[client] = false;
+				IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
+				hShowFlagCookie.Set(client, sCookieValue);
+				OnClientPostAdminCheck(client);
+				ReplyToCommand(client, "[SM] %T", "#ScoreBoardFlags_FlagInactive", client);
+			}
+			case true: {
+				cookieValue = 0;
+				g_hShowflag[client] = true;
+				IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
+				hShowFlagCookie.Set(client, sCookieValue);
+				OnClientPostAdminCheck(client);
+				ReplyToCommand(client, "[SM] %T", "#ScoreBoardFlags_FlagActive", client);
+			}
 		}
 	}
 	return Plugin_Handled;
@@ -178,12 +178,12 @@ public void OnClientCookiesCached(int client) {
 }
 
 public void OnThinkPost(int m_iEntity) {
-	int m_iLevelTemp[MAXPLAYERS+1] = {0, ...};
+	int m_iLevelTemp[MAXPLAYERS+1];
 	GetEntDataArray(m_iEntity, m_iOffset, m_iLevelTemp, sizeof(m_iLevelTemp));
-
-	for(int i = 1; i <= MaxClients; i++) {
+	
+	for(int i = 1; i <= MAXPLAYERS; i++) {
 		if(m_iLevel[i] != -1) {
-			if(m_iLevel[i] != m_iLevelTemp[i]) {
+			if(m_iLevel[i] != m_iLevelTemp[i]){
 				if (g_bCustomLevels && SCL_GetLevel(i) > 0) continue; // dont overwritte other custom level
 				SetEntData(m_iEntity, m_iOffset + (i * 4), m_iLevel[i]);
 			}
