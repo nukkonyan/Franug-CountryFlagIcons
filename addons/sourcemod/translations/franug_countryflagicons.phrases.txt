@@ -3,7 +3,7 @@
 	"#ScoreBoardFlags_FlagActive"
 	{
 		"en" "Your flag is now visible."
-		"jp" "今あなたフラグを見える。"
+		"jp" "今あなたフラッグを見える。"
 		"se" "Din flagga är nu synlig."
 	}
 	"#ScoreBoardFlags_FlagInactive"
