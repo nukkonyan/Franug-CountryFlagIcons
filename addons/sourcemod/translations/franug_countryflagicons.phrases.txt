@@ -4,10 +4,12 @@
 	{
 		"en" "Your flag is now visible."
 		"jp" "今あなたフラグを見える。"
+		"se" "Din flagga är nu synlig."
 	}
 	"#ScoreBoardFlags_FlagInactive"
 	{
 		"en" "Your flag is no longer visible."
 		"jp" "今あなたフラッグを見えない。"
+		"se" "Din flagga är nu ej synlig längre."
 	}
 }
