@@ -22,16 +22,7 @@
    - Saint Martin
    - Saint Pierre and Miquelon
 
-## Latest changelog - Version 1.4.2
-   - Fixed KeyValues invalid handle error.
-   - Added translation support.
-      - English.
-      - Swedish.
-	  - Japanese.
-   - Updated config
-      - Fixed flag for ' Venezuela ' with correct country code.
-	  - Added flag for ' United States Minor Outlying Islands '.
-	  - Added flag for ' Saint Barthelemy '.
-	  - Added flag for ' Saint Helena '.
-	  - Added flag for ' Saint Martin '.
-	  - Added flag for ' Saint Pierre and Miquelon'.
+## Latest changelog - Version 1.4.3
+   - Fixed translations to be translated properly.
+   - Fixed translation error not found.
+   - Switched over to StringMap from KeyValues for optimization.
