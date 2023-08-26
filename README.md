@@ -22,7 +22,5 @@
    - Saint Martin
    - Saint Pierre and Miquelon
 
-## Latest changelog - Version 1.4.3
-   - Fixed translations to be translated properly.
-   - Fixed translation error not found.
-   - Switched over to StringMap from KeyValues for optimization.
+## Latest changelog - Version 1.4.5
+   - Updated config to be separated with flags and custom flags to override actual flag, taking advantage of SteamID64. Idea by [pierrezin](https://forums.alliedmods.net/showpost.php?p=2808637&postcount=50).
