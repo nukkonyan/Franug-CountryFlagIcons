@@ -76,7 +76,7 @@ public void OnPluginStart()
 	{
 		case false:
 		{
-			SetFailState("[Franug CountryFlags] Failed to read flags from config file! (Is it installed in /configs/ directory?)");
+			SetFailState("[Franug: Scoreboard Flag] Failed to read flags from config file! (Is it installed in /configs/ directory?)");
 		}
 		
 		case true:
