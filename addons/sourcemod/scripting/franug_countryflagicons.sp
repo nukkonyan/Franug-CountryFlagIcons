@@ -36,7 +36,7 @@ bool g_hShowflag[MAXPLAYERS + 1] = {true, ...};
 
 ConVar net_public_adr = null;
 
-#define DATA "1.4.6"
+#define DATA "1.4.5"
 
 public Plugin myinfo =
 {
