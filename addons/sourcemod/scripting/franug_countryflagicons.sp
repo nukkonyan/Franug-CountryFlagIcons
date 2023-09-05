@@ -36,7 +36,7 @@ bool g_hShowflag[MAXPLAYERS + 1] = {true, ...};
 
 ConVar net_public_adr = null;
 
-#define DATA "1.4.4"
+#define DATA "1.4.6"
 
 public Plugin myinfo =
 {
@@ -222,7 +222,7 @@ public void OnClientPutInServer(int client)
 			{
 				trie.GetValue("UNKNOWN", m_iLevel[client]);
 			}
-			LogError("[Franug: Scoreboard Flag] No flag was found with \" %s \" for \" %N \", using fallback.. (Needs to be added)", code2, client);
+			LogError("[Franug: Scoreboard Flag] No flag was found with '%s' for ' %N ', using fallback.. (Needs to be added)", code2, client);
 		}
 		case true: trie.GetValue(code2, m_iLevel[client]);
 	}
