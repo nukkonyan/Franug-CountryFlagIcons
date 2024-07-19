@@ -1,15 +1,15 @@
 "Phrases"
 {
-	"#ScoreBoardFlags_FlagActive"
+	"#CountryFlagIcons_Active"
 	{
 		"en" "Your flag is now visible."
-		"jp" "今フラッグを見える。"
+		"jp" "フラッグに表示は有効です。"
 		"se" "Din flagga är nu synlig."
 	}
-	"#ScoreBoardFlags_FlagInactive"
+	"#CountryFlagIcons_Inactive"
 	{
 		"en" "Your flag is no longer visible."
-		"jp" "今フラッグを見えない。"
-		"se" "Din flagga är nu ej synlig längre."
+		"jp" "フラッグに表示は無効です。"
+		"se" "Din flagga är inte synlig längre."
 	}
 }

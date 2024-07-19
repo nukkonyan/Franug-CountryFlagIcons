@@ -378,7 +378,7 @@ Action Cmd_Showflag(int client, int args)
 				IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
 				hShowFlagCookie.Set(client, sCookieValue);
 				OnClientPutInServer(client);
-				ReplyToCommand(client, "[SM] %T", "#ScoreBoardFlags_FlagInactive", client);
+				ReplyToCommand(client, "[SM] %T", "#CountryFlagIcons_Inactive", client);
 			}
 			case true:
 			{
@@ -387,7 +387,7 @@ Action Cmd_Showflag(int client, int args)
 				IntToString(cookieValue, sCookieValue, sizeof(sCookieValue));
 				hShowFlagCookie.Set(client, sCookieValue);
 				OnClientPutInServer(client);
-				ReplyToCommand(client, "[SM] %T", "#ScoreBoardFlags_FlagActive", client);
+				ReplyToCommand(client, "[SM] %T", "#CountryFlagIcons_Active", client);
 			}
 		}
 	}
