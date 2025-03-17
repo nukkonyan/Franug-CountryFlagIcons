@@ -22,5 +22,14 @@
    - Saint Martin
    - Saint Pierre and Miquelon
 
-## Latest changelog - Version 1.4.5
+## changelogs
+ - Version 1.4.2
+   - Invalid keyvalues handle error fixed.
+   - Added translation support.
+ - Version 1.4.3
+   - Fixed translation error.
+   - Updated to use StringMap over KeyValues.
+ - Version 1.4.5
    - Updated config to be separated with flags and custom flags to override actual flag, taking advantage of SteamID64. Idea by [pierrezin](https://forums.alliedmods.net/showpost.php?p=2808637&postcount=50).
+ - Version 1.4.6
+   - Updated to support game vpn routings
