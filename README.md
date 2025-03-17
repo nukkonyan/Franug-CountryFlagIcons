@@ -31,5 +31,5 @@
    - Updated to use StringMap over KeyValues.
  - Version 1.4.5
    - Updated config to be separated with flags and custom flags to override actual flag, taking advantage of SteamID64. Idea by [pierrezin](https://forums.alliedmods.net/showpost.php?p=2808637&postcount=50).
- - Version 1.4.6
+ - Version 1.4.6 [current]
    - Updated to support game vpn routings
